@@ -151,9 +151,7 @@ jobs:
             exit 1
           fi
 
-          grep -q "NOVA Next.js Linux Test" "$RUNNER_TEMP/nova-nextjs-response.html"
-          grep -q "Backend status: ok" "$RUNNER_TEMP/nova-nextjs-response.html"
-          grep -q "Backend service: nova-node-backend" "$RUNNER_TEMP/nova-nextjs-response.html"
+          python -c 'import html,re,sys; text=html.unescape(re.sub(r"<[^>]*>", " ", open(sys.argv[1], encoding="utf-8").read())); text=" ".join(text.split()); expected=["NOVA Next.js Linux Test","Backend status: ok","Backend service: nova-node-backend"]; missing=[item for item in expected if item not in text]; print("PASS: Frontend rendered backend status and service data." if not missing else "FAIL: Missing rendered content: " + ", ".join(missing)); sys.exit(bool(missing))' "$RUNNER_TEMP/nova-nextjs-response.html"
 
           echo "PASS: Next.js received and displayed the Node.js backend response."
           echo "PASS: Frontend and backend integration smoke test."

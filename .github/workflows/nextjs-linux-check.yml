@@ -28,7 +28,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/nova-nextjs-check/app"
           cd "$RUNNER_TEMP/nova-nextjs-check"
           npm init -y
-          npm pkg set scripts.build="next build"
+          npm pkg set scripts.build="next build" scripts.start="next start"
           npm install --no-audit --no-fund next@16.4.4 react@19.3.1 react-dom@19.3.1
 
           cat > app/layout.jsx <<'EOF'
@@ -55,3 +55,25 @@ jobs:
       - name: Build Next.js production application
         working-directory: ${{ runner.temp }}/nova-nextjs-check
         run: npm run build
+
+      - name: Start production server and test HTTP response
+        working-directory: ${{ runner.temp }}/nova-nextjs-check
+        run: |
+          npm run start -- --hostname 127.0.0.1 --port 3000 > "$RUNNER_TEMP/nova-nextjs-server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/nova-nextjs-server.pid"
+
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/ -o "$RUNNER_TEMP/nova-nextjs-response.html"; then
+              break
+            fi
+            sleep 2
+          done
+
+          if [ ! -s "$RUNNER_TEMP/nova-nextjs-response.html" ]; then
+            cat "$RUNNER_TEMP/nova-nextjs-server.log"
+            echo "Production server HTTP test failed."
+            exit 1
+          fi
+
+          grep -q "NOVA Next.js Linux Test" "$RUNNER_TEMP/nova-nextjs-response.html"
+          echo "PASS: Production server returned the expected homepage."

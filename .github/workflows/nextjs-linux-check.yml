@@ -1,0 +1,57 @@
+name: NOVA Next.js Linux Compatibility Check
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/nextjs-linux-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nextjs-build:
+    name: Test Next.js on Linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create temporary Next.js test project
+        run: |
+          mkdir -p "$RUNNER_TEMP/nova-nextjs-check/app"
+          cd "$RUNNER_TEMP/nova-nextjs-check"
+          npm init -y
+          npm pkg set scripts.build="next build"
+          npm install --no-audit --no-fund next@16.4.4 react@19.3.1 react-dom@19.3.1
+
+          cat > app/layout.jsx <<'EOF'
+          export const metadata = {
+            title: "NOVA Linux Compatibility Test",
+            description: "Temporary Next.js build verification"
+          };
+
+          export default function RootLayout({ children }) {
+            return (
+              <html lang="en">
+                <body>{children}</body>
+              </html>
+            );
+          }
+          EOF
+
+          cat > app/page.jsx <<'EOF'
+          export default function Home() {
+            return <main><h1>NOVA Next.js Linux Test</h1></main>;
+          }
+          EOF
+
+      - name: Build Next.js production application
+        working-directory: ${{ runner.temp }}/nova-nextjs-check
+        run: npm run build

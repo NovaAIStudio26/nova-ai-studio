@@ -1,0 +1,24 @@
+{
+  "name": "nova-ai-studio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.11",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "@esbuild-kit/esm-loader": "npm:tsx@4.23.15"
+  }
+}

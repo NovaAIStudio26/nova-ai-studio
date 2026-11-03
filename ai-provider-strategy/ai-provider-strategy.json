@@ -1,0 +1,406 @@
+{
+  "project": "NOVA AI Studio",
+  "phase": 1,
+  "step": "1.3",
+  "title": "AI Provider Strategy",
+  "status": "documentation_approved_practical_verification_pending",
+  "required_technologies": [
+    "TypeScript",
+    "Python",
+    "JSON"
+  ],
+  "objectives": [
+    "Evaluate external AI providers",
+    "Keep provider integrations replaceable",
+    "Track capabilities, costs, limits, and reliability",
+    "Preserve a path for future NOVA AI model integration"
+  ],
+  "capability_categories": {
+    "story_understanding": {
+      "requirements": [
+        "Story summarization and analysis",
+        "Character and relationship extraction",
+        "Plot and scene breakdown",
+        "Structured JSON output",
+        "Long-context evaluation"
+      ],
+      "provider_selected": false
+    },
+    "image_generation": {
+      "requirements": [
+        "Character reference images",
+        "Scene and environment generation",
+        "Image editing and reference support",
+        "Quality and consistency evaluation",
+        "Commercial-use and pricing review"
+      ],
+      "provider_selected": false,
+      "perfect_character_consistency_guaranteed": false
+    },
+    "video_generation": {
+      "requirements": [
+        "Text-to-video evaluation",
+        "Image-to-video evaluation",
+        "Duration and resolution limits",
+        "Reference support",
+        "Asynchronous jobs and failure handling"
+      ],
+      "provider_selected": false
+    },
+    "voice_and_audio": {
+      "requirements": [
+        "Text-to-speech",
+        "Supported languages and voice controls",
+        "Speech recognition where required",
+        "Music and sound-effects capabilities",
+        "Consent and commercial-use review"
+      ],
+      "provider_selected": false
+    }
+  },
+  "evaluation_criteria": [
+    "Official documentation",
+    "Verified capabilities",
+    "Current official pricing",
+    "Rate limits and quotas",
+    "Reliability and latency",
+    "Privacy and data handling",
+    "Security requirements",
+    "Commercial-use terms",
+    "Proof-of-concept results"
+  ],
+  "cost_controls": {
+    "estimate_generation_costs": true,
+    "track_usage_where_supported": true,
+    "configurable_usage_limits": true,
+    "avoid_unnecessary_duplicate_requests": true,
+    "guarantee_free_generation": false
+  },
+  "technology_responsibilities": {
+    "TypeScript": "Application-side provider contracts, orchestration, and validation where appropriate",
+    "Python": "AI workflows, media processing, and model integrations where appropriate",
+    "JSON": "Structured configuration and normalized data exchange"
+  },
+  "security": {
+    "keep_provider_secrets_server_side": true,
+    "expose_private_api_keys_in_frontend": false,
+    "store_private_api_keys_in_public_configuration": false
+  },
+  "future_nova_engine": {
+    "provider_neutral_contracts": true,
+    "gradual_migration_strategy": true,
+    "replace_all_external_providers_immediately": false,
+    "require_measured_model_quality": true
+  },
+  "provider_decisions": {
+    "story_understanding": "not_evaluated",
+    "image_generation": "not_evaluated",
+    "video_generation": "not_evaluated",
+    "voice_and_audio": "not_evaluated",
+    "fallback_strategy": "not_finalized",
+    "usage_budgets": "not_finalized"
+  },
+  "evaluation_statuses": [
+    "not_evaluated",
+    "under_evaluation",
+    "approved_for_prototype",
+    "approved_for_production"
+  ],
+  "completion_requirements": [
+    "Review all capability categories",
+    "Research official provider documentation and pricing",
+    "Record unknowns and limitations",
+    "Validate Markdown and JSON documents",
+    "Complete final review before approval"
+  ],
+  "next_step": "1.4",
+  "next_step_allowed_before_approval": true,
+  "official_research": {
+    "research_date": "2026-10-23",
+    "sources_reviewed": [
+      {
+        "provider": "Google Gemini",
+        "documentation": "https://ai.google.dev/gemini-api/docs",
+        "status": "initial_review_completed"
+      },
+      {
+        "provider": "OpenAI",
+        "documentation": "https://developers.openai.com/api/docs",
+        "status": "initial_review_completed"
+      },
+      {
+        "provider": "Runway",
+        "documentation": "https://docs.dev.runwayml.com/",
+        "status": "initial_review_completed"
+      }
+    ],
+    "detailed_comparison": "documented_and_semantic_validation_passed",
+    "account_and_regional_availability": "pending",
+    "proof_of_concept_testing": "pending",
+    "production_provider_selection": "pending",
+    "recheck_official_sources_before_implementation": true,
+    "model_and_integration_findings": {
+      "google_gemini": {
+        "video_candidate": "gemini-omni-1.1-flash",
+        "candidate_status": "research_candidate_not_selected",
+        "approximate_720p_video_output_cost_usd_per_second": 0.1,
+        "approximate_60_second_video_output_cost_usd": 6.0,
+        "estimate_excludes": [
+          "Other generation tasks",
+          "Retries",
+          "Additional input or processing costs",
+          "Future pricing changes"
+        ],
+        "veo_3_1_preview_shutdown_date_reported_by_reviewed_docs": "2026-10-22",
+        "recheck_before_implementation": true
+      },
+      "openai": {
+        "image_generation": "candidate_models_and_actual_cost_require_evaluation",
+        "older_tts_models_shutdown_date_reported_by_reviewed_docs": "2027-01-06",
+        "replacement_workflow": "Realtime API workflow; not assumed to be a simple speech-endpoint model-ID replacement",
+        "urdu_voice_quality": "untested",
+        "production_selection": "pending"
+      },
+      "runway": {
+        "pricing_model": "credit_based",
+        "credit_price_usd_reported_by_reviewed_docs": 0.01,
+        "exact_video_cost": "depends_on_model_duration_resolution_and_options",
+        "account_and_regional_availability": "unverified"
+      },
+      "country_and_account_access": {
+        "google_gemini_country_support_includes_pakistan": true,
+        "openai_api_country_support_includes_pakistan": true,
+        "individual_account_and_model_access": "not_confirmed",
+        "runway_access": "unverified"
+      },
+      "hands_on_proof_of_concept": {
+        "performed": false,
+        "quality_latency_reliability_and_actual_cost": "not_measured"
+      }
+    },
+    "urdu_voice_quality_testing": "pending_pakistani_urdu_accent_and_native_speaker_review",
+    "additional_official_research_date": "2026-10-23",
+    "official_documentation": {
+      "google_video": "https://ai.google.dev/gemini-api/docs/video",
+      "google_video_model": "https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash",
+      "google_pricing": "https://ai.google.dev/gemini-api/docs/pricing",
+      "google_available_regions": "https://ai.google.dev/gemini-api/docs/available-regions",
+      "google_models_catalog": "https://ai.google.dev/gemini-api/docs/models",
+      "openai_tts": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "openai_deprecations": "https://developers.openai.com/api/docs/deprecations",
+      "openai_supported_countries": "https://developers.openai.com/api/docs/supported-countries",
+      "runway_setup": "https://docs.dev.runwayml.com/guides/setup/",
+      "runway_pricing": "https://docs.dev.runwayml.com/guides/pricing/",
+      "google_tts_languages_and_voices": "https://ai.google.dev/gemini-api/docs/speech-generation",
+      "openai_tts_languages_and_voices": "https://developers.openai.com/api/docs/guides/text-to-speech"
+    },
+    "model_candidates": {
+      "google_video": {
+        "model_id": "gemini-omni-1.1-flash",
+        "status": "documented_candidate_not_selected",
+        "documented_clip_duration_seconds": [
+          3,
+          10
+        ],
+        "documented_720p_output_estimate_usd_per_second": 0.1,
+        "estimated_60_seconds_of_output_usd": 6.0,
+        "estimate_is_not_a_total_movie_quote": true
+      },
+      "google_voice": {
+        "candidates": [
+          "gemini-3.8-flash-tts",
+          "gemini-3.8-flash-lite-tts"
+        ],
+        "status": "documented_candidates_not_selected",
+        "urdu_quality": "untested"
+      },
+      "openai_voice": {
+        "urdu_listed_in_official_tts_language_documentation": true,
+        "built_in_voices_optimized_for_english": true,
+        "older_tts_models_shutdown_date_reported_by_reviewed_docs": "2027-01-06",
+        "replacement_workflow": "Realtime API workflow; verify current implementation documentation",
+        "urdu_quality": "untested"
+      },
+      "runway": {
+        "pricing_model": "credit_based",
+        "reviewed_credit_price_usd": 0.01,
+        "account_setup_and_api_access": "unverified"
+      }
+    },
+    "country_and_account_access": {
+      "google_gemini_country_support_includes_pakistan": true,
+      "openai_api_country_support_includes_pakistan": true,
+      "individual_account_billing_and_model_entitlements": "unverified",
+      "runway_account_and_regional_access": "unverified"
+    },
+    "hands_on_verification": {
+      "authenticated_api_request_performed": false,
+      "proof_of_concept_performed": false,
+      "urdu_audio_quality_measured": false,
+      "video_quality_measured": false,
+      "latency_and_reliability_measured": false,
+      "actual_project_cost_measured": false,
+      "requires_user_owned_provider_account_and_private_key": true
+    }
+  },
+  "multilingual_character_voice_requirements": {
+    "status": "documented_product_requirement_pending_implementation",
+    "priority_language": "Pakistani Urdu",
+    "target": "broad_multilingual_coverage_with_extensible_language_registry",
+    "target_languages_include": [
+      "Urdu",
+      "Pashto",
+      "Punjabi",
+      "Sindhi",
+      "Balochi",
+      "Arabic",
+      "Hindi",
+      "English"
+    ],
+    "universal_provider_support_guaranteed": false,
+    "character_voice_profiles": [
+      "provider_and_voice_id",
+      "language_and_script",
+      "accent_or_locale_when_available",
+      "voice_characteristics",
+      "speaking_pace_and_emotional_style",
+      "pronunciation_notes",
+      "cross_scene_voice_continuity"
+    ],
+    "multi_character_dialogue": "evaluate_provider_capability",
+    "custom_voice_design": "evaluate_provider_capability",
+    "voice_replication": "consent_and_safeguards_required",
+    "unsupported_language_fallback": [
+      "try_another_eligible_provider",
+      "allow_manual_audio_import",
+      "clearly_report_unavailable_capabilities"
+    ],
+    "pakistani_urdu_accent_quality": "untested",
+    "native_speaker_review": "pending",
+    "production_provider_selection": "pending"
+  },
+  "step_1_3a_review": {
+    "title": "Structured AI Provider Comparison and Documentation Gap Closure",
+    "review_date": "2026-10-23",
+    "status": "documentation_approved_practical_tests_pending",
+    "provider_selection": "none_approved_for_production",
+    "comparison": {
+      "google_gemini": {
+        "video_candidate": "gemini-omni-1.1-flash",
+        "video_candidate_status": "documented_candidate_not_selected",
+        "approximate_720p_standard_video_output_usd_per_second": 0.1,
+        "estimated_10_second_output_usd": 1.0,
+        "estimated_60_second_output_usd": 6.0,
+        "account_and_model_access": "not_verified",
+        "quality_latency_reliability_and_actual_cost": "not_measured"
+      },
+      "openai": {
+        "story_and_image_workflows": "candidates_require_evaluation",
+        "urdu_tts_documented": true,
+        "built_in_voices_optimized_for_english": true,
+        "pakistani_urdu_quality": "untested",
+        "account_and_model_access": "not_verified",
+        "quality_latency_reliability_and_actual_cost": "not_measured"
+      },
+      "runway": {
+        "credit_price_usd": 0.01,
+        "video_rate_examples": {
+          "kling3_standard_no_audio_credits_per_second": 9,
+          "kling3_standard_audio_credits_per_second": 13,
+          "kling3_pro_no_audio_credits_per_second": 12,
+          "kling3_pro_audio_credits_per_second": 17
+        },
+        "account_billing_and_regional_access": "not_verified",
+        "quality_latency_reliability_and_actual_cost": "not_measured"
+      }
+    },
+    "official_sources": {
+      "google_video": "https://ai.google.dev/gemini-api/docs/video",
+      "google_omni_model": "https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash",
+      "google_pricing": "https://ai.google.dev/gemini-api/docs/pricing",
+      "google_speech": "https://ai.google.dev/gemini-api/docs/speech-generation",
+      "openai_tts": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "openai_pricing": "https://developers.openai.com/api/docs/pricing",
+      "openai_supported_countries": "https://developers.openai.com/api/docs/supported-countries",
+      "runway_pricing": "https://docs.dev.runwayml.com/guides/pricing/",
+      "runway_setup": "https://docs.dev.runwayml.com/guides/setup/"
+    },
+    "documentation_comparison_recorded": true,
+    "markdown_json_semantic_validation": "passed",
+    "account_verification": "pending",
+    "authenticated_api_test_performed": false,
+    "proof_of_concept_performed": false,
+    "pakistani_urdu_native_speaker_review": "pending",
+    "video_quality_latency_reliability_and_actual_cost": "not_measured",
+    "production_provider_selection": "pending",
+    "step_1_3_approval": "approved_documentation_only",
+    "step_1_4_allowed_before_approval": true,
+    "documentation_work": "complete",
+    "step_1_3_approval_date": "2026-11-01"
+  },
+  "fresh_official_verification": {
+    "research_date": "2026-11-01",
+    "status": "official_documentation_rechecked_user_approved_practical_tests_pending",
+    "google_gemini": {
+      "stable_video_model_id": "gemini-omni-1.1-flash",
+      "older_preview_endpoint": "gemini-omni-flash-preview",
+      "documented_video_duration_seconds": {
+        "minimum": 3,
+        "maximum": 10
+      },
+      "documented_output_resolutions": [
+        "360p",
+        "720p",
+        "1080p",
+        "4K"
+      ],
+      "direct_google_api_price_verified": false,
+      "account_access": "not_verified",
+      "quality_latency_reliability_and_actual_cost": "not_measured",
+      "official_model_documentation": "https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash",
+      "official_video_documentation": "https://ai.google.dev/gemini-api/docs/video",
+      "official_pricing": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    "runway_dev": {
+      "credit_price_usd": 0.01,
+      "kling_3_0_model_attribution": "third_party_kling_model_available_through_runway_dev_api",
+      "kling_3_0_rates_credits_per_second": {
+        "standard_no_audio": 9,
+        "standard_with_audio": 13,
+        "pro_no_audio": 12,
+        "pro_with_audio": 17
+      },
+      "gemini_omni_flash_1_1_720p_route_credits_per_second": 10,
+      "gemini_omni_flash_1_1_720p_route_usd_per_second": 0.1,
+      "gemini_route_price_is_not_direct_google_api_price": true,
+      "account_billing_and_regional_access": "not_verified",
+      "quality_latency_reliability_and_actual_cost": "not_measured",
+      "official_pricing": "https://docs.dev.runwayml.com/guides/pricing/",
+      "official_changelog": "https://docs.dev.runwayml.com/changelog/"
+    },
+    "research_limitations": [
+      "Documentation review only; no authenticated API test performed",
+      "No proof-of-concept generation performed",
+      "No provider account or billing access verified",
+      "Pakistani Urdu native-speaker review pending",
+      "Video quality, latency, reliability, and actual project cost not measured",
+      "No provider approved for production"
+    ],
+    "provider_selection": "pending",
+    "step_1_3_approval": "approved_documentation_only",
+    "step_1_4_allowed_before_approval": true,
+    "illustrative_route_cost_estimates": {
+      "currency": "USD",
+      "ten_seconds_total_generated_video": 1.0,
+      "sixty_seconds_total_generated_video": 6.0,
+      "sixty_second_estimate_basis": "Aggregate across multiple clips or generations; not a single 60-second generation.",
+      "route": "Runway Dev Gemini Omni Flash 1.1 at 720p",
+      "rate_usd_per_second": 0.1,
+      "illustrative_only": true
+    },
+    "step_1_3_approval_date": "2026-11-01"
+  },
+  "step_1_3_approval": "approved_documentation_only",
+  "step_1_3_approval_date": "2026-11-01",
+  "step_1_3_approval_scope": "AI Provider Strategy documentation only; no provider approved for production."
+}

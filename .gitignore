@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Backups and temporary files
+backups/
+.python-wheel-check/
+*.backup
+*.backup-*
+*.bak
+*.bak_*
+*.before-*
+
+# Build output and caches
+.next/
+dist/
+build/
+coverage/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Exclude unidentified root files
+/-H
+/-w
+
+# Exclude backup files with -backup suffix
+*-backup

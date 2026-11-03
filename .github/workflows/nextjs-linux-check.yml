@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   nextjs-build:
-    name: Test Next.js on Linux
+    name: Test Next.js and Node.js Integration on Linux
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Create temporary Next.js test project
+      - name: Create temporary Next.js and Node.js test project
         run: |
           mkdir -p "$RUNNER_TEMP/nova-nextjs-check/app"
           cd "$RUNNER_TEMP/nova-nextjs-check"
@@ -34,7 +34,7 @@ jobs:
           cat > app/layout.jsx <<'EOF'
           export const metadata = {
             title: "NOVA Linux Compatibility Test",
-            description: "Temporary Next.js build verification"
+            description: "Temporary Next.js and Node.js integration verification"
           };
 
           export default function RootLayout({ children }) {
@@ -47,33 +47,113 @@ jobs:
           EOF
 
           cat > app/page.jsx <<'EOF'
-          export default function Home() {
-            return <main><h1>NOVA Next.js Linux Test</h1></main>;
+          export const dynamic = "force-dynamic";
+
+          export default async function Home() {
+            const response = await fetch(
+              `${process.env.NOVA_BACKEND_URL}/health`,
+              { cache: "no-store" }
+            );
+
+            if (!response.ok) {
+              throw new Error(`Backend returned HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            return (
+              <main>
+                <h1>NOVA Next.js Linux Test</h1>
+                <p>Backend status: {data.status}</p>
+                <p>Backend service: {data.service}</p>
+              </main>
+            );
           }
+          EOF
+
+          cat > server.js <<'EOF'
+          const http = require("node:http");
+
+          const server = http.createServer((req, res) => {
+            if (req.url !== "/health") {
+              res.writeHead(404, { "Content-Type": "application/json" });
+              return res.end(JSON.stringify({ error: "Not found" }));
+            }
+
+            res.writeHead(200, {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-store"
+            });
+
+            res.end(JSON.stringify({
+              status: "ok",
+              service: "nova-node-backend"
+            }));
+          });
+
+          server.listen(4000, "127.0.0.1", () => {
+            console.log("NOVA Node.js backend listening on port 4000");
+          });
           EOF
 
       - name: Build Next.js production application
         working-directory: ${{ runner.temp }}/nova-nextjs-check
         run: npm run build
 
-      - name: Start production server and test HTTP response
+      - name: Test Node.js backend and Next.js production integration
         working-directory: ${{ runner.temp }}/nova-nextjs-check
         run: |
-          npm run start -- --hostname 127.0.0.1 --port 3000 > "$RUNNER_TEMP/nova-nextjs-server.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/nova-nextjs-server.pid"
+          node server.js > "$RUNNER_TEMP/nova-backend.log" 2>&1 &
+          BACKEND_PID=$!
 
+          NOVA_BACKEND_URL=http://127.0.0.1:4000 \
+            npm run start -- --hostname 127.0.0.1 --port 3000 \
+            > "$RUNNER_TEMP/nova-nextjs-server.log" 2>&1 &
+          FRONTEND_PID=$!
+
+          cleanup() {
+            kill "$FRONTEND_PID" "$BACKEND_PID" 2>/dev/null || true
+          }
+          trap cleanup EXIT
+
+          BACKEND_READY=false
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:3000/ -o "$RUNNER_TEMP/nova-nextjs-response.html"; then
+            if curl --fail --silent http://127.0.0.1:4000/health \
+              -o "$RUNNER_TEMP/nova-backend-response.json"; then
+              BACKEND_READY=true
               break
             fi
             sleep 2
           done
 
-          if [ ! -s "$RUNNER_TEMP/nova-nextjs-response.html" ]; then
+          if [ "$BACKEND_READY" != true ]; then
+            cat "$RUNNER_TEMP/nova-backend.log"
+            echo "FAIL: Node.js backend did not become ready."
+            exit 1
+          fi
+
+          grep -q '"status":"ok"' "$RUNNER_TEMP/nova-backend-response.json"
+          echo "PASS: Node.js backend health endpoint."
+
+          FRONTEND_READY=false
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/ \
+              -o "$RUNNER_TEMP/nova-nextjs-response.html"; then
+              FRONTEND_READY=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$FRONTEND_READY" != true ]; then
             cat "$RUNNER_TEMP/nova-nextjs-server.log"
-            echo "Production server HTTP test failed."
+            echo "FAIL: Next.js production server did not respond."
             exit 1
           fi
 
           grep -q "NOVA Next.js Linux Test" "$RUNNER_TEMP/nova-nextjs-response.html"
-          echo "PASS: Production server returned the expected homepage."
+          grep -q "Backend status: ok" "$RUNNER_TEMP/nova-nextjs-response.html"
+          grep -q "Backend service: nova-node-backend" "$RUNNER_TEMP/nova-nextjs-response.html"
+
+          echo "PASS: Next.js received and displayed the Node.js backend response."
+          echo "PASS: Frontend and backend integration smoke test."

@@ -50,3 +50,6 @@ Thumbs.db
 
 # Exclude backup files with -backup suffix
 *-backup
+
+# TypeScript build cache
+*.tsbuildinfo

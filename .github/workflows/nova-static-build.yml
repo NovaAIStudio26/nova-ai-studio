@@ -1,0 +1,68 @@
+name: NOVA Dashboard Preview Deployment
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/web/**"
+      - ".github/workflows/nova-static-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: nova-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and Deploy NOVA Dashboard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: apps/web
+        run: npm ci
+
+      - name: TypeScript verification
+        working-directory: apps/web
+        run: npm run typecheck
+
+      - name: Build static frontend
+        working-directory: apps/web
+        run: npm run build -- --webpack
+
+      - name: Verify static export
+        working-directory: apps/web
+        run: test -f out/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload dashboard
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/out/
+
+      - name: Deploy dashboard
+        id: deployment
+        uses: actions/deploy-pages@v4
